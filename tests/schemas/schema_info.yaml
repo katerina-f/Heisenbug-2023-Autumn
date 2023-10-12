@@ -1,0 +1,10 @@
+schemas:
+    all_types:
+    schema_name: "%prefix_for_current_schema%-value-{}",
+    description_versions:
+        1:
+            file:        "example_schema1.json"
+            description: "Для чего используется эта схема?"
+        2:
+            file:        "example_schema2.json"
+            description: "А эта для чего?"

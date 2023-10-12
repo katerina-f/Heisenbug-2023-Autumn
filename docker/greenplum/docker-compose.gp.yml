@@ -1,0 +1,21 @@
+version: '3.6'
+
+services:
+  gp:
+    image: <your_repository>/greenplum:5.28.14
+    container_name: gp
+    hostname: gp
+    restart: unless-stopped
+    command: /bin/bash /tmp/init/init-gp.sh
+    ports:
+      - "5432:5432"
+      - "9922:22"
+    env_file: ../../.env
+    volumes:
+      - ./init-gp.sql:/tmp/init/init-gp.sql
+      - ./init-gp.sh:/tmp/init/init-gp.sh
+    healthcheck:
+      test: LD_LIBRARY_PATH=/usr/local/greenplum-db-5.28.14/lib /usr/local/greenplum-db-5.28.14/bin/psql -h localhost --username=gpadmin db_dev -c "select case exists(select proname from pg_proc limit 1) when true then 0 else 1/0 end"
+      interval: 5s
+      timeout: 5s
+      retries: 10

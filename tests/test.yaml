@@ -1,0 +1,78 @@
+# символ -> значит переименование и обрабатывается в PrepareClass
+
+avro_params_base: &avro_params
+  schema_registry_urls: [ "{schema_registry_url}" ] # Тут требуется задать ссылку на работающий SchemaRegistry
+  schema_version: "latest"
+  schema_name: "topic-value-{suffix}"
+
+
+base_test: &smoke_avro_test
+  description:  "Заготовка для тестирования выгрузки в AVRO"
+  ddl_in: src_base
+  dml_in: src->base
+  dml_out_er: tgt_er->avro_base
+
+  input_table: "{table}"
+  topic:
+  producer_config:
+  key:
+  headers: &headers
+    - ["test_header", "42"]
+  produce_workers:
+
+  consumer_parameters:
+    consume_timeout_sec: 5.0
+    consume_max_iterations: 4
+
+  loading_type: "avro"
+  schema_type: "base"
+  tgt_system: "kafka"
+  mark: [ ]
+
+
+base_json_test: &smoke_json_test
+  description:  "Заготовка для тестирования выгрузки в JSON"
+  ddl_in: src_base
+  dml_in: src->base
+  dml_out_er: tgt_er->json_base
+
+  input_table: "{table}"
+  topic:
+  producer_config:
+  key:
+  headers: *headers
+  avro_params:
+  produce_workers:
+
+  consumer_parameters:
+    consume_timeout_sec: 5.0
+    consume_max_iterations: 4
+
+  loading_type: "json"
+  schema_type: "base"
+  tgt_system: "kafka"
+  mark: [ ]
+
+
+# В двух тестах ниже источник пустой, поэтому [] по ключу dml_in
+"json + src_is_empty":
+    description: "src пустой + грузим в JSON"
+    dml_in: [  ]
+    dml_out_er: tgt_er->src_is_empty
+    mark: [ external ]
+    allure_feature: "Kafka“
+    allure_story: ["json"]
+    <<: *smoke_json_test
+
+
+"avro + src_is_empty":
+    description: "src пустой + грузим в AVRO"
+    dml_in: [  ]
+    dml_out_er: tgt_er->src_is_empty
+    mark: [ external ]
+    avro_params:
+        schema_version: "1"
+        <<: *avro_params
+    allure_feature: "Kafka"
+    allure_story: ["avro"]
+    <<: *smoke_avro_test

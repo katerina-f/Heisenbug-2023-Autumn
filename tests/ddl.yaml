@@ -1,0 +1,24 @@
+# символ -> значит переименование и обрабатывается в PrepareClass
+
+"src_base": &src_base
+    description: описание источника
+    schema_nm: test_kafka
+    table_nm: src_{test_id}
+    col_flg: k2->key_1, fs, fi, fdt, fa, fd
+    dist_key: key_1
+    create_view: False
+
+
+# Для выгрузок в Greenplum тут еще были бы следующие объекты:
+"tgt_base": &tgt_base
+  description: базовое описание структуры целевой таблицы
+  schema_nm: test_%your_loader% # отдельная схема для каждого тестируемого загрузчика
+  table_nm: tgt_{test_id}
+  col_flg: k1, k2, ft, fs
+  dist_key: key_1
+
+
+tgt_er:
+  description: таблица ER - expected result, со стандартным списком полей
+  table_nm: tgt__er{test_id}
+  <<: *tgt_base

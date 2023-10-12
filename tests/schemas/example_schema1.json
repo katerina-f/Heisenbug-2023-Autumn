@@ -1,0 +1,27 @@
+{
+	"type": "record",
+	"name": "TestKafkaLoaderBase",
+	"namespace": "project.example",
+	"fields": [
+		{
+			"name":"key_1",
+			"type": ["null","string"] ,
+			"default":null
+		} ,
+		{
+			"name":"fld_str",
+			"type": ["null","string"] ,
+			"default":null
+		} ,
+		{
+			"name":"fld_int",
+			"type":"int",
+			"default":null
+		} ,
+		{
+			"name":"fld_dttm",
+			"type":"string",
+			"logicalType":"date"
+		}
+	]
+}

@@ -1,0 +1,29 @@
+version: '3.6'
+
+services:
+  gp:
+    extends:
+      file: docker/greenplum/docker-compose.gp.yml
+      service: gp
+
+  zookeeper:
+    extends:
+      file: docker/zookeeper/docker-compose.zookeeper.yml
+      service: zookeeper
+
+  broker1:
+    extends:
+      file: docker/kafka/docker-compose.kafka.yml
+      service: broker1
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  schemaregistry:
+    extends:
+      file: docker/schemaregistry/docker-compose.schemaregistry.yml
+      service: schemaregistry
+    hostname: schemaregistry
+    depends_on:
+      zookeeper:
+        condition: service_healthy

@@ -1,0 +1,16 @@
+"src->long_row": >
+  INSERT INTO {table} VALUES
+    ("TST_1" , repeat("a", 40000),  1, "2017-01-01 00:00:00.000 +0300", array["1", "2", "3", "4" ,"5"," "], "2017-01-01");
+
+
+"tgt_er->json_long":
+    key_fields_count: 0
+    titles: ["key_1", "fld_str", "fld_int", "fld_dttm", "fld_str_arr", "fld_dt"]
+    messages:
+        - ["TST_1", "{str_32768}", 1, "2017-01-01 00:00:00", ["1", "2", "3", "4" ,"5"," "], "2017-01-01"]
+
+
+"tgt_er->src_is_empty":
+  key_fields_count: 0
+  titles: ["key_1", "fld_str", "fld_int", "fld_dttm", "fld_dt"]
+  messages: []
